@@ -19,6 +19,14 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    leetcode_username: {
+      type: String,
+      required: false,
+    },
+    hackerrank_username: {
+      type: String,
+      required: false,
+    },
   },
   { timestamps: true }
 );
