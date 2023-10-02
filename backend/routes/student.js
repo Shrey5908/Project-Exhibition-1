@@ -2,6 +2,9 @@ const express = require("express");
 const { handleGetAllUsers } = require("../controllers/user");
 const { handlePostUser } = require("../controllers/user");
 const { handleGetUser } = require("../controllers/user");
+const { handleGetUserLeetcode } = require("../controllers/user");
+const { handleGetUserHackerrank } = require("../controllers/user");
+
 // const { handleGetAllUsers } = require("../controllers/user");
 
 const router = express.Router();
@@ -20,5 +23,7 @@ router
     if (!user) return res.status(404).send(`Not Found ${req.params.id}`);
     return res.json({ status: "not working", id: req.params.id });
   });
+router.route("/leetcode/:leetcode_username").get(handleGetUserLeetcode);
+router.route("/hackerrank/:hackerrank_username").get(handleGetUserHackerrank);
 
 module.exports = router;
