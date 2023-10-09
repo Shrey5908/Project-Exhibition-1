@@ -1,29 +1,22 @@
 const express = require("express");
-const { handleGetAllUsers } = require("../controllers/user");
-const { handlePostUser } = require("../controllers/user");
-const { handleGetUser } = require("../controllers/user");
-const { handleGetUserLeetcode } = require("../controllers/user");
-const { handleGetUserHackerrank } = require("../controllers/user");
+const {
+  handleGetAllStudents,
+  handleLogin,
+  handleRegister,
+  handlePostStudent,
+  handleGetStudent,
+  handleGetStudentLeetcode,
+  handleGetStudentHackerrank,
+  handleStudentLogin,
+} = require("../controllers/student");
 
 // const { handleGetAllUsers } = require("../controllers/user");
 
-const router = express.Router();
+const studentrouter = express.Router();
 
-router.route("/").get(handleGetAllUsers).post(handlePostUser);
-router
-  .route("/:studentid")
-  .get(handleGetUser)
-  .patch(async (req, res) => {
-    const user = await mongoUser.findByIdAndUpdate(req.params.id, req.body);
-    if (!user) return res.status(404).send(`Not Found ${req.params.id}`);
-    return res.json({ status: "not working", id: req.params.id });
-  })
-  .delete(async (req, res) => {
-    const user = await mongoUser.findByIdAndDelete(req.params.id);
-    if (!user) return res.status(404).send(`Not Found ${req.params.id}`);
-    return res.json({ status: "not working", id: req.params.id });
-  });
-router.route("/leetcode/:leetcode_username").get(handleGetUserLeetcode);
-router.route("/hackerrank/:hackerrank_username").get(handleGetUserHackerrank);
+studentrouter.use(express.static("public"));
 
-module.exports = router;
+studentrouter.route("/").get(handleLogin).post(handleStudentLogin);
+studentrouter.route("/register").get(handleRegister).post(handlePostStudent);
+
+module.exports = studentrouter;

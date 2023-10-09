@@ -27,9 +27,17 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: false,
     },
+    cgpa: {
+      type: String,
+      required: false,
+    },
+    branch: {
+      type: String,
+      required: false,
+    },
   },
   { timestamps: true }
 );
-const User = mongoose.model("user", userSchema);
+const Student = mongoose.model("user", userSchema);
 
-module.exports = User;
+module.exports = Student;
