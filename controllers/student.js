@@ -1,21 +1,22 @@
 const Student = require("../models/student");
 const axios = require("axios");
-const {setUser} = require("../service/authentication");
+const { setUser } = require("../service/authentication");
 
 const header = {
-  'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36'
+  "User-Agent":
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36",
+};
+async function handleRegister(req, res) {
+  res.render("../views/registration.ejs");
 }
-async function handleRegister(req,res){
-  res.render("../views/registration.ejs")
+async function handleLogin(req, res) {
+  res.render("../views/login.ejs");
 }
-async function handleLogin(req,res){
-  res.render("../views/login.ejs")
+async function handleprofile(req, res) {
+  res.render("../views/users-profile.ejs");
 }
-async function handleprofile(req,res){
-  res.render("../views/users-profile.ejs")
-}
-async function handledashboard(req,res){
-  res.render("../views/dashboard.ejs")
+async function handledashboard(req, res) {
+  res.render("../views/dashboard.ejs");
 }
 async function handleGetAllStudents(req, res) {
   const allStudents = await Student.find({});
@@ -23,7 +24,16 @@ async function handleGetAllStudents(req, res) {
 }
 
 async function handlePostStudent(req, res) {
-  const {studentid,name,email,cgpa,branch,leetcode_username,hackerrank_username,password} = req.body;
+  const {
+    studentid,
+    name,
+    email,
+    cgpa,
+    branch,
+    leetcode_username,
+    hackerrank_username,
+    password,
+  } = req.body;
   await Student.create({
     studentid,
     name,
@@ -39,45 +49,59 @@ async function handlePostStudent(req, res) {
 
 async function handleGetStudent(req, res) {
   const student = await Student.findOne({ studentid: req.params.studentid });
-  if (!student) return res.status(404).send(`Not Found ${req.params.studentid}`);
+  if (!student)
+    return res.status(404).send(`Not Found ${req.params.studentid}`);
   return res.json(student);
 }
 
 async function handleGetStudentLeetcode(req, res) {
-  const leetcodeResponse = await axios.get("https://leetcode-stats-api.herokuapp.com/"+req.params.leetcode_Studentname);
-  if (!leetcodeResponse) return res.status(404).send(`Not Found ${req.params.leetcode_Studentname}`);
+  const leetcodeResponse = await axios.get(
+    "https://leetcode-stats-api.herokuapp.com/" +
+      req.params.leetcode_Studentname
+  );
+  if (!leetcodeResponse)
+    return res.status(404).send(`Not Found ${req.params.leetcode_Studentname}`);
   let leetcode = {
-    totalSolved : leetcodeResponse.data.totalSolved,
-    easySolved : leetcodeResponse.data.easySolved,
-    mediumSolved : leetcodeResponse.data.mediumSolved,
+    totalSolved: leetcodeResponse.data.totalSolved,
+    easySolved: leetcodeResponse.data.easySolved,
+    mediumSolved: leetcodeResponse.data.mediumSolved,
     hardSolved: leetcodeResponse.data.hardSolved,
-    ranking: leetcodeResponse.data.ranking
-  }
+    ranking: leetcodeResponse.data.ranking,
+  };
   return res.json(leetcode);
 }
 
 async function handleGetStudentHackerrank(req, res) {
-  const response = await axios.get("https://www.hackerrank.com/rest/hackers/"+req.params.hackerrank_Studentname+"/recent_challenges?limit=100000000000000", {headers: header});
-  if (!response) return res.status(404).send(`Not Found ${req.params.hackerrank_Studentname}`);
+  const response = await axios.get(
+    "https://www.hackerrank.com/rest/hackers/" +
+      req.params.hackerrank_Studentname +
+      "/recent_challenges?limit=100000000000000",
+    { headers: header }
+  );
+  if (!response)
+    return res
+      .status(404)
+      .send(`Not Found ${req.params.hackerrank_Studentname}`);
   let hackerrank = {
-    totalSolved : response.data.models.length
-  }
+    totalSolved: response.data.models.length,
+  };
   return res.json(hackerrank);
 }
 
-async function handleStudentLogin(req,res){
-  const {studentid,password} = req.body;
-  const user = await Student.findOne({studentid,password});
-  if(!user)
-      return res.render(
-          "login",
-          {
-              message:"Invalid credentials"
-          }
-      );
-  const token = setUser(user);
-  res.cookie("uid",token);
-  return res.redirect("/student/dashboard");
+async function handleStudentLogin(req, res) {
+  const { studentid, password } = req.body;
+  try {
+    const user = await Student.findOne({ studentid, password });
+    if (!user)
+      return res.render("login", {
+        message: "Invalid credentials",
+      });
+    const token = setUser(user);
+    res.cookie("uid", token);
+    return res.redirect("/student/dashboard");
+  } catch (error) {
+    return res.redirect("/");
+  }
 }
 
 module.exports = {
@@ -90,5 +114,5 @@ module.exports = {
   handleStudentLogin,
   handleGetStudent,
   handleGetStudentLeetcode,
-  handleGetStudentHackerrank
+  handleGetStudentHackerrank,
 };
