@@ -11,6 +11,12 @@ async function handleRegister(req,res){
 async function handleLogin(req,res){
   res.render("../views/login.ejs")
 }
+async function handleprofile(req,res){
+  res.render("../views/users-profile.ejs")
+}
+async function handledashboard(req,res){
+  res.render("../views/dashboard.ejs")
+}
 async function handleGetAllStudents(req, res) {
   const allStudents = await Student.find({});
   return res.json(allStudents);
@@ -71,12 +77,14 @@ async function handleStudentLogin(req,res){
       );
   const token = setUser(user);
   res.cookie("uid",token);
-  return res.redirect("https://google.com");
+  return res.redirect("/student/dashboard");
 }
 
 module.exports = {
   handleRegister,
   handleLogin,
+  handleprofile,
+  handledashboard,
   handleGetAllStudents,
   handlePostStudent,
   handleStudentLogin,

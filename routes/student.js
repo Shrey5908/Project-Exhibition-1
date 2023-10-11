@@ -3,6 +3,8 @@ const {
   handleGetAllStudents,
   handleLogin,
   handleRegister,
+  handledashboard,
+  handleprofile,
   handlePostStudent,
   handleGetStudent,
   handleGetStudentLeetcode,
@@ -18,5 +20,7 @@ studentrouter.use(express.static("public"));
 
 studentrouter.route("/").get(handleLogin).post(handleStudentLogin);
 studentrouter.route("/register").get(handleRegister).post(handlePostStudent);
+studentrouter.route("/profile").get(handleprofile)
+studentrouter.route("/dashboard").get(handledashboard)
 
 module.exports = studentrouter;
